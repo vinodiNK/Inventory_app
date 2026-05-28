@@ -8,8 +8,6 @@ import {
     View,
 } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
-
 // Odoo Server URL
 const ODOO_URL = "http://192.168.172.174:8069";
 
@@ -19,6 +17,7 @@ const USERNAME = "admin";
 const PASSWORD = "admin18odoo";
 
 export default function HomeScreen({ navigation, route }) {
+
   const uid = route?.params?.uid;
 
   const [products, setProducts] = useState([]);
@@ -27,6 +26,7 @@ export default function HomeScreen({ navigation, route }) {
   // Fetch Products from Odoo
   const fetchProducts = async () => {
     try {
+
       // Step 1 - Login
       const loginResponse = await fetch(
         `${ODOO_URL}/web/session/authenticate`,
@@ -48,10 +48,7 @@ export default function HomeScreen({ navigation, route }) {
 
       const loginData = await loginResponse.json();
 
-      if (!loginData.result || !loginData.result.uid) {
-        console.log("Login Failed");
-        return;
-      }
+      console.log("LOGIN RESPONSE:", loginData);
 
       // Step 2 - Fetch Products
       const productResponse = await fetch(
@@ -85,11 +82,14 @@ export default function HomeScreen({ navigation, route }) {
 
       const productData = await productResponse.json();
 
+      console.log("PRODUCTS:", productData);
+
       if (productData.result) {
         setProducts(productData.result);
       } else {
         console.log("No Products Found");
       }
+
     } catch (error) {
       console.log("Error Fetching Products:", error);
     } finally {
@@ -104,7 +104,10 @@ export default function HomeScreen({ navigation, route }) {
   // Product Item UI
   const renderProduct = ({ item }) => (
     <View style={styles.productCard}>
-      <Text style={styles.productName}>{item.name}</Text>
+
+      <Text style={styles.productName}>
+        {item.name}
+      </Text>
 
       <Text style={styles.productText}>
         Code: {item.default_code || "N/A"}
@@ -117,13 +120,17 @@ export default function HomeScreen({ navigation, route }) {
       <Text style={styles.productText}>
         Available Qty: {item.qty_available}
       </Text>
+
     </View>
   );
 
   return (
     <View style={styles.container}>
+
       {/* Header */}
-      <Text style={styles.title}>Odoo Inventory</Text>
+      <Text style={styles.title}>
+        Odoo Inventory
+      </Text>
 
       <Text style={styles.subtitle}>
         Product List from Odoo Database
@@ -142,64 +149,57 @@ export default function HomeScreen({ navigation, route }) {
         />
       )}
 
-      {/* Footer Navigation */}
+      {/* Footer */}
       <View style={styles.footer}>
-
-        {/* Back Button */}
-        <TouchableOpacity
-          style={styles.footerItem}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color="#555" />
-          <Text style={styles.footerText}>Back</Text>
-        </TouchableOpacity>
 
         {/* Home Button */}
         <TouchableOpacity
           style={styles.footerItem}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.navigate("Login")}
         >
-          <Ionicons name="home" size={24} color="green" />
+          <Text style={styles.icon}>🏠</Text>
+
           <Text style={[styles.footerText, { color: "green" }]}>
             Home
           </Text>
         </TouchableOpacity>
 
-        {/* Add Button */}
+        {/* Add Product Button */}
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => navigation.navigate("AddProduct")}
-        >
-          <Ionicons name="add" size={30} color="#fff" />
-        </TouchableOpacity>
-
-        {/* Product Button */}
-        <TouchableOpacity
-          style={styles.footerItem}
           onPress={() =>
-            navigation.navigate("Products", {
+            navigation.navigate("AddProduct", {
               uid,
             })
           }
         >
-          <Ionicons name="cube" size={24} color="#555" />
-          <Text style={styles.footerText}>Products</Text>
+          <Text style={styles.addIcon}>＋</Text>
         </TouchableOpacity>
 
-        {/* Account Button */}
+        {/* Products Button */}
         <TouchableOpacity
           style={styles.footerItem}
-          onPress={() => navigation.navigate("Account")}
+          onPress={() =>
+            navigation.navigate("Home", {
+              uid,
+            })
+          }
         >
-          <Ionicons name="person" size={24} color="#555" />
-          <Text style={styles.footerText}>Account</Text>
+          <Text style={styles.icon}>📦</Text>
+
+          <Text style={styles.footerText}>
+            Products
+          </Text>
         </TouchableOpacity>
+
       </View>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -242,7 +242,6 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
 
-  /* Footer Styles */
   footer: {
     position: "absolute",
     bottom: 0,
@@ -270,7 +269,10 @@ const styles = StyleSheet.create({
     color: "#555",
   },
 
-  /* Center Add Button */
+  icon: {
+    fontSize: 24,
+  },
+
   addButton: {
     width: 60,
     height: 60,
@@ -281,4 +283,11 @@ const styles = StyleSheet.create({
     marginTop: -25,
     elevation: 5,
   },
+
+  addIcon: {
+    fontSize: 30,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+
 });

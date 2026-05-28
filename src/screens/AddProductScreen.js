@@ -1,34 +1,91 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import {
+  Alert,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
-  View,
+  TouchableOpacity
 } from "react-native";
 
-import { createProduct } from "../api/odoo";
+import * as ImagePicker from "expo-image-picker";
 
-export default function AddProductScreen({
-  route,
-  navigation,
-}) {
-  const { uid } = route.params;
+import { createProduct, getCategories } from "../api/odoo";
+
+export default function AddProductScreen({ route, navigation }) {
+  const uid = route?.params?.uid;
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [barcode, setBarcode] = useState("");
+  const [defaultCode, setDefaultCode] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [description, setDescription] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [image, setImage] = useState(null);
 
-  const handleAdd = async () => {
-    await createProduct(uid, {
-      name,
-      price,
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const loadCategories = async () => {
+    try {
+      const data = await getCategories(uid);
+      setCategories(data);
+
+      if (data.length > 0) {
+        setCategoryId(data[0].id.toString());
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+      base64: true,
     });
 
-    navigation.goBack();
+    if (!result.canceled) {
+      setImage(result.assets[0]);
+    }
+  };
+
+  const handleAdd = async () => {
+    try {
+      const productData = {
+        name,
+        list_price: parseFloat(price),
+        barcode,
+        default_code: defaultCode,
+        description_sale: description,
+        categ_id: parseInt(categoryId),
+        qty_available: parseFloat(quantity),
+        image_1920: image?.base64 || false,
+        type: "product",
+      };
+
+      await createProduct(uid, productData);
+
+      Alert.alert("Success", "Product added successfully");
+
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Failed to add product");
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Add Product</Text>
+
       <TextInput
         placeholder="Product Name"
         style={styles.input}
@@ -44,13 +101,56 @@ export default function AddProductScreen({
         keyboardType="numeric"
       />
 
+      <TextInput
+        placeholder="Barcode"
+        style={styles.input}
+        value={barcode}
+        onChangeText={setBarcode}
+      />
+
+      <TextInput
+        placeholder="Internal Reference"
+        style={styles.input}
+        value={defaultCode}
+        onChangeText={setDefaultCode}
+      />
+
+      <TextInput
+        placeholder="Quantity"
+        style={styles.input}
+        value={quantity}
+        onChangeText={setQuantity}
+        keyboardType="numeric"
+      />
+
+      <TextInput
+        placeholder="Description"
+        style={[styles.input, { height: 100 }]}
+        multiline
+        value={description}
+        onChangeText={setDescription}
+      />
+
+      <Text style={styles.label}>Category ID</Text>
+
+      <TextInput
+        placeholder="Category ID"
+        style={styles.input}
+        value={categoryId}
+        onChangeText={setCategoryId}
+        keyboardType="numeric"
+      />
+
+      
+     
+
       <TouchableOpacity
         style={styles.button}
         onPress={handleAdd}
       >
         <Text style={styles.buttonText}>Save Product</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -58,15 +158,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
+  },
+
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
   },
 
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
+    borderRadius: 8,
     padding: 12,
     marginBottom: 15,
-    borderRadius: 8,
+  },
+
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    fontWeight: "600",
   },
 
   button: {
@@ -74,11 +187,30 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
+    marginTop: 10,
+    marginBottom: 30,
+  },
+
+  imageButton: {
+    backgroundColor: "#007bff",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 20,
   },
 
   buttonText: {
     color: "white",
-    fontWeight: "bold",
     fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  image: {
+    width: 150,
+    height: 150,
+    alignSelf: "center",
+    marginBottom: 20,
+    borderRadius: 10,
   },
 });
+

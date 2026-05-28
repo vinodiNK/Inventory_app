@@ -1,10 +1,10 @@
 import { useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { updateProduct } from "../api/odoo";
@@ -13,11 +13,12 @@ export default function EditProductScreen({
   route,
   navigation,
 }) {
-  const { uid, product } = route.params;
+  const uid = route?.params?.uid;
+  const product = route?.params?.product;
 
-  const [name, setName] = useState(product.name);
+  const [name, setName] = useState(product?.name ?? "");
   const [price, setPrice] = useState(
-    product.list_price.toString()
+    product?.list_price?.toString() ?? ""
   );
 
   const handleUpdate = async () => {
