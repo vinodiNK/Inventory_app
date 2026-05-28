@@ -1,17 +1,17 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    FlatList,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from "react-native";
 
 import {
-  deleteProduct,
-  getProducts,
-  login,
+    deleteProduct,
+    getProducts,
+    login,
 } from "../api/odoo";
 
 import ProductCard from "../components/ProductCard";
@@ -22,6 +22,7 @@ export default function ProductListScreen({ navigation, route }) {
   const [products, setProducts] = useState([]);
   const [uid, setUid] = useState(routeUid);
   const [isAdmin, setIsAdmin] = useState(routeIsAdmin);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (routeUid) {
@@ -59,6 +60,11 @@ export default function ProductListScreen({ navigation, route }) {
     loadProducts(uid);
   };
 
+  // Filter products based on search text
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
       {isAdmin && (
@@ -74,8 +80,17 @@ export default function ProductListScreen({ navigation, route }) {
         </TouchableOpacity>
       )}
 
+      {/* Search Bar */}
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search products..."
+        placeholderTextColor="#999"
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+
       <FlatList
-        data={products}
+        data={filteredProducts}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <ProductCard
@@ -155,6 +170,18 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+
+  searchBar: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 15,
+    backgroundColor: "#fff",
+    fontSize: 16,
+    color: "#333",
   },
 
   footer: {

@@ -13,41 +13,46 @@ const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator 
+        initialRouteName="Login"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{ title: "Login" }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "Home" }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="Products"
           component={ProductListScreen}
-          options={{ title: "Products" }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="ProductOverview"
           component={ProductOverviewScreen}
-          options={{ title: "Product Overview" }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="AddProduct"
           component={AddProductScreen}
-          options={{ title: "Add Product" }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="EditProduct"
           component={EditProductScreen}
-          options={{ title: "Edit Product" }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,19 +1,20 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import {
-    deleteProduct,
-    getProducts,
-    login,
+  deleteProduct,
+  getProducts,
+  login,
 } from "../api/odoo";
 
 import ProductCard from "../components/ProductCard";
@@ -28,6 +29,7 @@ export default function HomeScreen({ navigation, route }) {
   const [isAdmin, setIsAdmin] = useState(routeIsAdmin);
   const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (routeUid) {
@@ -96,6 +98,11 @@ export default function HomeScreen({ navigation, route }) {
     }
   }, []);
 
+  // Filter products based on search text
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
 
@@ -108,12 +115,21 @@ export default function HomeScreen({ navigation, route }) {
         Product List from Odoo Database
       </Text>
 
+      {/* Search Bar */}
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search products..."
+        placeholderTextColor="#999"
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+
       {/* Product List */}
       {loading ? (
         <ActivityIndicator size="large" color="green" />
       ) : (
         <FlatList
-          data={products}
+          data={filteredProducts}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <ProductCard
@@ -212,6 +228,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#666",
     marginBottom: 20,
+  },
+
+  searchBar: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 15,
+    backgroundColor: "#f9f9f9",
+    fontSize: 16,
+    color: "#333",
   },
 
   productCard: {
