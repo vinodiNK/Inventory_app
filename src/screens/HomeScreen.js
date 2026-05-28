@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -8,87 +9,51 @@ import {
     View,
 } from "react-native";
 
-// Odoo Server URL
-const ODOO_URL = "http://192.168.172.174:8069";
+import {
+    deleteProduct,
+    getProducts,
+    login,
+} from "../api/odoo";
 
-// Odoo Credentials
-const DB_NAME = "admin18odoo";
-const USERNAME = "admin";
-const PASSWORD = "admin18odoo";
+import ProductCard from "../components/ProductCard";
 
 export default function HomeScreen({ navigation, route }) {
 
-  const uid = route?.params?.uid;
+  const routeUid = route?.params?.uid ?? null;
 
   const [products, setProducts] = useState([]);
+  const [uid, setUid] = useState(routeUid);
   const [loading, setLoading] = useState(true);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
+  useEffect(() => {
+    if (routeUid) {
+      setUid(routeUid);
+      loadProducts(routeUid);
+    } else {
+      loadProducts();
+    }
+  }, [routeUid]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (routeUid) {
+        loadProducts(routeUid);
+      } else {
+        loadProducts();
+      }
+    }, [routeUid])
+  );
 
   // Fetch Products from Odoo
-  const fetchProducts = async () => {
+  const loadProducts = async (userId) => {
     try {
+      setLoading(true);
+      const currentUid = userId ?? uid ?? (await login());
+      setUid(currentUid);
 
-      // Step 1 - Login
-      const loginResponse = await fetch(
-        `${ODOO_URL}/web/session/authenticate`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            params: {
-              db: DB_NAME,
-              login: USERNAME,
-              password: PASSWORD,
-            },
-          }),
-        }
-      );
-
-      const loginData = await loginResponse.json();
-
-      console.log("LOGIN RESPONSE:", loginData);
-
-      // Step 2 - Fetch Products
-      const productResponse = await fetch(
-        `${ODOO_URL}/web/dataset/call_kw/product.product/search_read`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            params: {
-              model: "product.product",
-              method: "search_read",
-              args: [],
-              kwargs: {
-                domain: [],
-                fields: [
-                  "id",
-                  "name",
-                  "list_price",
-                  "qty_available",
-                  "default_code",
-                ],
-                limit: 100,
-              },
-            },
-          }),
-        }
-      );
-
-      const productData = await productResponse.json();
-
-      console.log("PRODUCTS:", productData);
-
-      if (productData.result) {
-        setProducts(productData.result);
-      } else {
-        console.log("No Products Found");
-      }
+      const data = await getProducts(currentUid);
+      setProducts(data || []);
 
     } catch (error) {
       console.log("Error Fetching Products:", error);
@@ -97,32 +62,18 @@ export default function HomeScreen({ navigation, route }) {
     }
   };
 
+  const handleDelete = async (id) => {
+    await deleteProduct(uid, id);
+    loadProducts(uid);
+  };
+
   useEffect(() => {
-    fetchProducts();
+    if (routeUid) {
+      loadProducts(routeUid);
+    } else {
+      loadProducts();
+    }
   }, []);
-
-  // Product Item UI
-  const renderProduct = ({ item }) => (
-    <View style={styles.productCard}>
-
-      <Text style={styles.productName}>
-        {item.name}
-      </Text>
-
-      <Text style={styles.productText}>
-        Code: {item.default_code || "N/A"}
-      </Text>
-
-      <Text style={styles.productText}>
-        Price: Rs. {item.list_price}
-      </Text>
-
-      <Text style={styles.productText}>
-        Available Qty: {item.qty_available}
-      </Text>
-
-    </View>
-  );
 
   return (
     <View style={styles.container}>
@@ -143,7 +94,24 @@ export default function HomeScreen({ navigation, route }) {
         <FlatList
           data={products}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={renderProduct}
+          renderItem={({ item }) => (
+            <ProductCard
+              item={item}
+              isSelected={selectedProductId === item.id}
+              onPress={() =>
+                setSelectedProductId(
+                  selectedProductId === item.id ? null : item.id
+                )
+              }
+              onEdit={() =>
+                navigation.navigate("EditProduct", {
+                  uid,
+                  product: item,
+                })
+              }
+              onDelete={() => handleDelete(item.id)}
+            />
+          )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
         />

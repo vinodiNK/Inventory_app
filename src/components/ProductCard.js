@@ -7,33 +7,41 @@ import {
 
 export default function ProductCard({
   item,
+  isSelected,
+  onPress,
   onEdit,
   onDelete,
 }) {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
       <Text style={styles.name}>{item.name}</Text>
 
       <Text style={styles.price}>
         Price: ${item.list_price}
       </Text>
 
-      <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={onEdit}
-        >
-          <Text style={styles.buttonText}>Edit</Text>
-        </TouchableOpacity>
+      {isSelected && (
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={onEdit}
+          >
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={onDelete}
-        >
-          <Text style={styles.buttonText}>Delete</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={onDelete}
+          >
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </TouchableOpacity>
   );
 }
 
