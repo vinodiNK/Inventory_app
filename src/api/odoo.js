@@ -24,7 +24,10 @@ axios.defaults.withCredentials = false;
 // LOGIN
 // ======================
 
-export const login = async () => {
+export const login = async (
+  username = USERNAME,
+  password = PASSWORD
+) => {
   try {
     console.log("LOGIN START");
 
@@ -38,8 +41,8 @@ export const login = async () => {
           method: "login",
           args: [
             DB_NAME,
-            USERNAME,
-            PASSWORD,
+            username,
+            password,
           ],
         },
         id: Math.random(),

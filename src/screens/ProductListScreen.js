@@ -16,26 +16,36 @@ import {
 
 import ProductCard from "../components/ProductCard";
 
-export default function ProductListScreen({ navigation }) {
+export default function ProductListScreen({ navigation, route }) {
+  const routeUid = route?.params?.uid ?? null;
   const [products, setProducts] = useState([]);
-  const [uid, setUid] = useState(null);
+  const [uid, setUid] = useState(routeUid);
 
   useEffect(() => {
-    loadProducts();
-  }, []);
+    if (routeUid) {
+      setUid(routeUid);
+      loadProducts(routeUid);
+    } else {
+      loadProducts();
+    }
+  }, [routeUid]);
 
   useFocusEffect(
     useCallback(() => {
-      loadProducts();
-    }, [])
+      if (routeUid) {
+        loadProducts(routeUid);
+      } else {
+        loadProducts();
+      }
+    }, [routeUid])
   );
 
-  const loadProducts = async () => {
-    const userId = await login();
+  const loadProducts = async (userId) => {
+    const currentUid = userId ?? uid ?? (await login());
 
-    setUid(userId);
+    setUid(currentUid);
 
-    const data = await getProducts(userId);
+    const data = await getProducts(currentUid);
 
     setProducts(data);
   };
@@ -43,7 +53,7 @@ export default function ProductListScreen({ navigation }) {
   const handleDelete = async (id) => {
     await deleteProduct(uid, id);
 
-    loadProducts();
+    loadProducts(uid);
   };
 
   return (
