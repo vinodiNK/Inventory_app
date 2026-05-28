@@ -89,7 +89,49 @@ export default function ProductListScreen({ navigation, route }) {
             onDelete={() => handleDelete(item.id)}
           />
         )}
+        contentContainerStyle={{ paddingBottom: 100 }}
       />
+
+      {/* Footer Navigation Bar */}
+      <View style={styles.footer}>
+        {isAdmin && (
+          <TouchableOpacity
+            style={styles.footerItem}
+            onPress={() => navigation.navigate("Home", { uid, isAdmin })}
+          >
+            <Text style={styles.icon}>🏠</Text>
+            <Text style={[styles.footerText, { color: "green" }]}>Home</Text>
+          </TouchableOpacity>
+        )}
+
+        {isAdmin && (
+          <TouchableOpacity
+            style={styles.addButtonFooter}
+            onPress={() =>
+              navigation.navigate("AddProduct", {
+                uid,
+              })
+            }
+          >
+            <Text style={styles.addIcon}>＋</Text>
+          </TouchableOpacity>
+        )}
+
+        {isAdmin && (
+          <TouchableOpacity
+            style={styles.footerItem}
+            onPress={() =>
+              navigation.navigate("ProductOverview", {
+                uid,
+                isAdmin,
+              })
+            }
+          >
+            <Text style={styles.icon}>📊</Text>
+            <Text style={styles.footerText}>Overview</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 }
@@ -112,6 +154,54 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: "white",
     fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 75,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: "#ddd",
+    elevation: 10,
+    paddingBottom: 5,
+  },
+
+  footerItem: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  footerText: {
+    fontSize: 12,
+    marginTop: 3,
+    color: "#555",
+  },
+
+  icon: {
+    fontSize: 24,
+  },
+
+  addButtonFooter: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "green",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: -25,
+    elevation: 5,
+  },
+
+  addIcon: {
+    fontSize: 30,
+    color: "#fff",
     fontWeight: "bold",
   },
 });

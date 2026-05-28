@@ -248,7 +248,7 @@ export default function ProductOverviewScreen({
         {isAdmin && (
           <TouchableOpacity
             style={styles.footerItem}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("Home", { uid, isAdmin })}
           >
             <Text style={styles.icon}>🏠</Text>
 
@@ -262,6 +262,17 @@ export default function ProductOverviewScreen({
             onPress={() => navigation.navigate("AddProduct", { uid: routeUid })}
           >
             <Text style={styles.addIcon}>＋</Text>
+          </TouchableOpacity>
+        )}
+
+        {isAdmin && (
+          <TouchableOpacity
+            style={styles.footerItem}
+            onPress={() => navigation.navigate("Products", { uid, isAdmin })}
+          >
+            <Text style={styles.icon}>📋</Text>
+
+            <Text style={styles.footerText}>Products</Text>
           </TouchableOpacity>
         )}
       </View>
