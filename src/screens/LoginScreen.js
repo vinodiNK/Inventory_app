@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 
-import { login } from "../api/odoo";
+import { getUserRole, login } from "../api/odoo";
 
 export default function LoginScreen({
   navigation,
@@ -26,10 +26,13 @@ export default function LoginScreen({
     );
 
     if (uid) {
+      const userRole = await getUserRole(uid);
+      
       navigation.replace(
         "Home",
         {
           uid,
+          isAdmin: userRole.isAdmin,
         }
       );
     } else {

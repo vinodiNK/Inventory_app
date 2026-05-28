@@ -21,9 +21,11 @@ import ProductCard from "../components/ProductCard";
 export default function HomeScreen({ navigation, route }) {
 
   const routeUid = route?.params?.uid ?? null;
+  const routeIsAdmin = route?.params?.isAdmin ?? false;
 
   const [products, setProducts] = useState([]);
   const [uid, setUid] = useState(routeUid);
+  const [isAdmin, setIsAdmin] = useState(routeIsAdmin);
   const [loading, setLoading] = useState(true);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -163,22 +165,24 @@ export default function HomeScreen({ navigation, route }) {
           <Text style={styles.addIcon}>＋</Text>
         </TouchableOpacity>
 
-        {/* Products Button */}
-        <TouchableOpacity
-          style={styles.footerItem}
-          onPress={() =>
-            navigation.navigate("ProductOverview", {
-              uid,
-            })
-          }
-        >
-          <Text style={styles.icon}>📊</Text>
+        {/* Products Overview Button - Only for Admin */}
+        {isAdmin && (
+          <TouchableOpacity
+            style={styles.footerItem}
+            onPress={() =>
+              navigation.navigate("ProductOverview", {
+                uid,
+                isAdmin,
+              })
+            }
+          >
+            <Text style={styles.icon}>📊</Text>
 
-          <Text style={styles.footerText}>
-            Product Overview
-          </Text>
-        </TouchableOpacity>
-
+            <Text style={styles.footerText}>
+              Product Overview
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
     </View>

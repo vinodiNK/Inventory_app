@@ -282,3 +282,75 @@ export const deleteProduct = async (
     );
   }
 };
+
+// ======================
+// GET USER ROLE
+// ======================
+
+export const getUserRole = async (uid) => {
+  try {
+
+    console.log("GET USER ROLE START");
+
+    const response = await axios.post(
+      `${ODOO_URL}/jsonrpc`,
+      {
+        jsonrpc: "2.0",
+        method: "call",
+        params: {
+          service: "object",
+          method: "execute_kw",
+          args: [
+            DB_NAME,
+            uid,
+            PASSWORD,
+            "res.users",
+            "read",
+            [uid],
+            {
+              fields: [
+                "id",
+                "name",
+                "groups_id",
+              ],
+            },
+          ],
+        },
+        id: Math.random(),
+      }
+    );
+
+    console.log(
+      "GET USER ROLE RESPONSE:",
+      response.data
+    );
+
+    const userData = response.data.result?.[0];
+    
+    // Check if user has admin group (group_id contains admin group)
+    // Odoo admin users are typically in group_id with admin-related groups
+    const isAdmin = userData?.groups_id?.some(
+      (group) =>
+        typeof group === "number" ||
+        (typeof group === "object" && group.includes && group[1]?.includes("admin"))
+    ) || userData?.groups_id?.length > 1;
+
+    return {
+      userId: userData?.id,
+      userName: userData?.name,
+      groups: userData?.groups_id || [],
+      isAdmin: isAdmin,
+    };
+
+  } catch (error) {
+
+    console.log(
+      "GET USER ROLE ERROR:",
+      error.response?.data || error.message
+    );
+
+    return {
+      isAdmin: false,
+    };
+  }
+};
