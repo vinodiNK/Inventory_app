@@ -1,29 +1,32 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import {
-    deleteProduct,
-    getProducts,
-    login,
+  deleteProduct,
+  getProducts,
+  login,
 } from "../api/odoo";
 
 import ProductCard from "../components/ProductCard";
 
 export default function ProductListScreen({ navigation, route }) {
   const routeUid = route?.params?.uid ?? null;
+  const routeIsAdmin = route?.params?.isAdmin ?? false;
   const [products, setProducts] = useState([]);
   const [uid, setUid] = useState(routeUid);
+  const [isAdmin, setIsAdmin] = useState(routeIsAdmin);
 
   useEffect(() => {
     if (routeUid) {
       setUid(routeUid);
+      setIsAdmin(routeIsAdmin);
       loadProducts(routeUid);
     } else {
       loadProducts();
@@ -58,16 +61,18 @@ export default function ProductListScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() =>
-          navigation.navigate("AddProduct", {
-            uid,
-          })
-        }
-      >
-        <Text style={styles.addButtonText}>Add Product</Text>
-      </TouchableOpacity>
+      {isAdmin && (
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() =>
+            navigation.navigate("AddProduct", {
+              uid,
+            })
+          }
+        >
+          <Text style={styles.addButtonText}>Add Product</Text>
+        </TouchableOpacity>
+      )}
 
       <FlatList
         data={products}

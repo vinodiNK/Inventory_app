@@ -141,29 +141,31 @@ export default function HomeScreen({ navigation, route }) {
       {/* Footer */}
       <View style={styles.footer}>
 
-        {/* Home Button */}
-        <TouchableOpacity
-          style={styles.footerItem}
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Text style={styles.icon}>🏠</Text>
+          {/* Home Button - only visible to admin */}
+          {isAdmin && (
+            <TouchableOpacity
+              style={styles.footerItem}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <Text style={styles.icon}>🏠</Text>
 
-          <Text style={[styles.footerText, { color: "green" }]}>
-            Home
-          </Text>
-        </TouchableOpacity>
+              <Text style={[styles.footerText, { color: "green" }]}>Home</Text>
+            </TouchableOpacity>
+          )}
 
-        {/* Add Product Button */}
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() =>
-            navigation.navigate("AddProduct", {
-              uid,
-            })
-          }
-        >
-          <Text style={styles.addIcon}>＋</Text>
-        </TouchableOpacity>
+          {/* Add Product Button - only visible to admin */}
+          {isAdmin && (
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() =>
+                navigation.navigate("AddProduct", {
+                  uid,
+                })
+              }
+            >
+              <Text style={styles.addIcon}>＋</Text>
+            </TouchableOpacity>
+          )}
 
         {/* Products Overview Button - Only for Admin */}
         {isAdmin && (
