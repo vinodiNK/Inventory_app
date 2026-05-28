@@ -9,86 +9,305 @@ import {
 
 import { getProducts, login } from "../api/odoo";
 
-export default function ProductOverviewScreen({ route }) {
-  const routeUid = route?.params?.uid ?? null;
-  const [products, setProducts] = useState([]);
-  const [uid, setUid] = useState(routeUid);
-  const [loading, setLoading] = useState(true);
+export default function ProductOverviewScreen({
+  route,
+}) {
 
-  const loadProducts = async (userId) => {
+  const routeUid =
+    route?.params?.uid ?? null;
+
+  const [products, setProducts] =
+    useState([]);
+
+  const [uid, setUid] =
+    useState(routeUid);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  // LOAD PRODUCTS
+  const loadProducts = async (
+    userId
+  ) => {
+
     try {
+
       setLoading(true);
-      const currentUid = userId ?? uid ?? (await login());
+
+      const currentUid =
+        userId ??
+        uid ??
+        (await login());
+
       setUid(currentUid);
 
-      const data = await getProducts(currentUid);
+      const data =
+        await getProducts(
+          currentUid
+        );
+
       setProducts(data || []);
+
     } catch (error) {
-      console.log("ProductOverview load error:", error);
+
+      console.log(
+        "ProductOverview load error:",
+        error
+      );
+
     } finally {
+
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (routeUid) loadProducts(routeUid);
+
+    if (routeUid)
+      loadProducts(routeUid);
+
     else loadProducts();
+
   }, [routeUid]);
+
+  // TOTAL PRODUCTS
+  const totalProducts =
+    products.length;
+
+  // TOTAL STOCK VALUE
+  const totalStockValue =
+    products.reduce(
+      (sum, item) =>
+        sum +
+        (item.list_price || 0) *
+          (item.qty_available || 0),
+      0
+    );
+
+  // TOTAL QUANTITY
+  const totalQuantity =
+    products.reduce(
+      (sum, item) =>
+        sum +
+        (item.qty_available || 0),
+      0
+    );
+
+  // MOST EXPENSIVE PRODUCT
+  const highestPrice =
+    products.length > 0
+      ? Math.max(
+          ...products.map(
+            (p) =>
+              p.list_price || 0
+          )
+        )
+      : 0;
+
+  // CHEAPEST PRODUCT
+  const lowestPrice =
+    products.length > 0
+      ? Math.min(
+          ...products.map(
+            (p) =>
+              p.list_price || 0
+          )
+        )
+      : 0;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Product Overview</Text>
 
-      <Text style={styles.count}>Total products: {products.length}</Text>
+      <Text style={styles.title}>
+        Product Overview
+      </Text>
 
+      {/* SUMMARY CARDS */}
+
+      <View style={styles.summaryContainer}>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            Total Products
+          </Text>
+
+          <Text style={styles.cardValue}>
+            {totalProducts}
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            Total Quantity
+          </Text>
+
+          <Text style={styles.cardValue}>
+            {totalQuantity}
+          </Text>
+        </View>
+
+      </View>
+
+      <View style={styles.summaryContainer}>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            Total Stock Value
+          </Text>
+
+          <Text style={styles.cardValue}>
+            Rs.{" "}
+            {totalStockValue.toFixed(2)}
+          </Text>
+        </View>
+
+      </View>
+
+      <View style={styles.summaryContainer}>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            Highest Price
+          </Text>
+
+          <Text style={styles.cardValue}>
+            Rs.{" "}
+            {highestPrice.toFixed(2)}
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>
+            Lowest Price
+          </Text>
+
+          <Text style={styles.cardValue}>
+            Rs.{" "}
+            {lowestPrice.toFixed(2)}
+          </Text>
+        </View>
+
+      </View>
+
+      {/* LOADING */}
       {loading ? (
-        <ActivityIndicator size="large" color="green" />
+
+        <ActivityIndicator
+          size="large"
+          color="green"
+        />
+
       ) : (
+
         <FlatList
           data={products}
-          keyExtractor={(item) => item.id.toString()}
+
+          keyExtractor={(item) =>
+            item.id.toString()
+          }
+
           renderItem={({ item }) => (
+
             <View style={styles.row}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.price}>Rs. {item.list_price}</Text>
+
+              <View>
+
+                <Text style={styles.name}>
+                  {item.name}
+                </Text>
+
+                <Text style={styles.smallText}>
+                  Qty:{" "}
+                  {item.qty_available ??
+                    0}
+                </Text>
+
+              </View>
+
+              <Text style={styles.price}>
+                Rs.{" "}
+                {item.list_price}
+              </Text>
+
             </View>
           )}
         />
+
       )}
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     padding: 16,
     paddingTop: 50,
     backgroundColor: "#fff",
   },
+
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
+    marginBottom: 20,
+  },
+
+  summaryContainer: {
+    flexDirection: "row",
+    justifyContent:
+      "space-between",
+    marginBottom: 15,
+  },
+
+  card: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+    padding: 15,
+    borderRadius: 10,
+    marginHorizontal: 5,
+    elevation: 2,
+  },
+
+  cardTitle: {
+    fontSize: 14,
+    color: "#666",
     marginBottom: 8,
   },
-  count: {
-    textAlign: "center",
-    color: "#666",
-    marginBottom: 12,
+
+  cardValue: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "green",
   },
+
   row: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 12,
+    justifyContent:
+      "space-between",
+    alignItems: "center",
+    padding: 15,
     borderBottomWidth: 1,
     borderColor: "#eee",
   },
+
   name: {
-    fontSize: 16,
-  },
-  price: {
     fontSize: 16,
     fontWeight: "600",
   },
+
+  smallText: {
+    fontSize: 13,
+    color: "#666",
+    marginTop: 4,
+  },
+
+  price: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "green",
+  },
+
 });
