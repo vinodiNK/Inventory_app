@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import AddProductScreen from "../screens/AddProductScreen";
 import EditProductScreen from "../screens/EditProductScreen";
+import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import ProductListScreen from "../screens/ProductListScreen";
 
@@ -16,6 +17,12 @@ export default function AppNavigator() {
           name="Login"
           component={LoginScreen}
           options={{ title: "Login" }}
+        />
+
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "Home" }}
         />
 
         <Stack.Screen

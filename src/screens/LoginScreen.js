@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 import {
-    Alert,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { login } from "../api/odoo";
@@ -27,7 +27,7 @@ export default function LoginScreen({
 
     if (uid) {
       navigation.replace(
-        "Products",
+        "Home",
         {
           uid,
         }
