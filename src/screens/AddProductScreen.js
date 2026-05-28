@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -6,85 +5,118 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 
-import * as ImagePicker from "expo-image-picker";
+import {
+  createProduct,
+  getCategories,
+} from "../api/odoo";
 
-import { createProduct, getCategories } from "../api/odoo";
+export default function AddProductScreen({
+  route,
+  navigation,
+}) {
 
-export default function AddProductScreen({ route, navigation }) {
   const uid = route?.params?.uid;
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [barcode, setBarcode] = useState("");
-  const [defaultCode, setDefaultCode] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [description, setDescription] = useState("");
-  const [categoryId, setCategoryId] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [image, setImage] = useState(null);
+  const [defaultCode, setDefaultCode] =
+    useState("");
+
+  const [quantity, setQuantity] =
+    useState("");
+
+  const [description, setDescription] =
+    useState("");
+
+  const [categoryId, setCategoryId] =
+    useState("");
+
+  const [categories, setCategories] =
+    useState([]);
 
   useEffect(() => {
     loadCategories();
   }, []);
 
   const loadCategories = async () => {
+
     try {
+
       const data = await getCategories(uid);
+
       setCategories(data);
 
       if (data.length > 0) {
-        setCategoryId(data[0].id.toString());
+        setCategoryId(
+          data[0].id.toString()
+        );
       }
+
     } catch (error) {
+
       console.log(error);
-    }
-  };
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 4],
-      quality: 1,
-      base64: true,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0]);
     }
   };
 
   const handleAdd = async () => {
+
     try {
+
       const productData = {
+
         name,
+
         list_price: parseFloat(price),
+
         barcode,
+
         default_code: defaultCode,
+
         description_sale: description,
+
         categ_id: parseInt(categoryId),
-        qty_available: parseFloat(quantity),
-        image_1920: image?.base64 || false,
+
         type: "product",
       };
 
-      await createProduct(uid, productData);
+      console.log(
+        "ADDING PRODUCT:",
+        productData
+      );
 
-      Alert.alert("Success", "Product added successfully");
+      await createProduct(
+        uid,
+        productData
+      );
+
+      Alert.alert(
+        "Success",
+        "Product added successfully"
+      );
 
       navigation.goBack();
+
     } catch (error) {
+
       console.log(error);
-      Alert.alert("Error", "Failed to add product");
+
+      Alert.alert(
+        "Error",
+        "Failed to add product"
+      );
     }
   };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Add Product</Text>
+
+      <Text style={styles.title}>
+        Add Product
+      </Text>
 
       <TextInput
         placeholder="Product Name"
@@ -125,13 +157,18 @@ export default function AddProductScreen({ route, navigation }) {
 
       <TextInput
         placeholder="Description"
-        style={[styles.input, { height: 100 }]}
+        style={[
+          styles.input,
+          { height: 100 },
+        ]}
         multiline
         value={description}
         onChangeText={setDescription}
       />
 
-      <Text style={styles.label}>Category ID</Text>
+      <Text style={styles.label}>
+        Category ID
+      </Text>
 
       <TextInput
         placeholder="Category ID"
@@ -141,20 +178,21 @@ export default function AddProductScreen({ route, navigation }) {
         keyboardType="numeric"
       />
 
-      
-     
-
       <TouchableOpacity
         style={styles.button}
         onPress={handleAdd}
       >
-        <Text style={styles.buttonText}>Save Product</Text>
+        <Text style={styles.buttonText}>
+          Save Product
+        </Text>
       </TouchableOpacity>
+
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     padding: 20,
@@ -191,26 +229,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 
-  imageButton: {
-    backgroundColor: "#007bff",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 20,
-  },
-
   buttonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
   },
 
-  image: {
-    width: 150,
-    height: 150,
-    alignSelf: "center",
-    marginBottom: 20,
-    borderRadius: 10,
-  },
 });
-

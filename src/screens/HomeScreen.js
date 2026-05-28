@@ -2,6 +2,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
     StyleSheet,
     Text,
@@ -62,9 +63,27 @@ export default function HomeScreen({ navigation, route }) {
     }
   };
 
-  const handleDelete = async (id) => {
-    await deleteProduct(uid, id);
-    loadProducts(uid);
+  const handleDelete = (product) => {
+    Alert.alert(
+      "Delete Product",
+      `Are you sure you want to delete "${product.name}"?`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Delete cancelled"),
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            await deleteProduct(uid, product.id);
+            setSelectedProductId(null);
+            loadProducts(uid);
+          },
+          style: "destructive",
+        },
+      ]
+    );
   };
 
   useEffect(() => {
@@ -109,7 +128,7 @@ export default function HomeScreen({ navigation, route }) {
                   product: item,
                 })
               }
-              onDelete={() => handleDelete(item.id)}
+              onDelete={() => handleDelete(item)}
             />
           )}
           showsVerticalScrollIndicator={false}
