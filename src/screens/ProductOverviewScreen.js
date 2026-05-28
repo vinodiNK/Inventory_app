@@ -264,6 +264,13 @@ export default function ProductOverviewScreen({
             <Text style={styles.addIcon}>＋</Text>
           </TouchableOpacity>
         )}
+
+        {/* Products Button */} <TouchableOpacity 
+        style={styles.footerItem} 
+        onPress={() => navigation.navigate( "Home", { uid, isAdmin, } ) } 
+        > <Text style={styles.icon}>📦</Text> <Text style={styles.footerText}> Products </Text> 
+        </TouchableOpacity>
+
       </View>
 
     </View>

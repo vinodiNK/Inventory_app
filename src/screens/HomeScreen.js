@@ -130,7 +130,8 @@ export default function HomeScreen({ navigation, route }) {
       ) : (
         <FlatList
           data={filteredProducts}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()      
+          }
           renderItem={({ item }) => (
             <ProductCard
               item={item}
@@ -197,7 +198,7 @@ export default function HomeScreen({ navigation, route }) {
             <Text style={styles.icon}>📊</Text>
 
             <Text style={styles.footerText}>
-               Overview
+              Overview
             </Text>
           </TouchableOpacity>
         )}

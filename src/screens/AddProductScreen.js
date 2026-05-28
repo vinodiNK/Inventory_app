@@ -166,9 +166,7 @@ export default function AddProductScreen({
         onChangeText={setDescription}
       />
 
-      <Text style={styles.label}>
-        Category ID
-      </Text>
+     
 
       <TextInput
         placeholder="Category ID"
@@ -202,7 +200,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 40,
+    marginTop: 40,
     textAlign: "center",
   },
 
@@ -210,7 +209,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
-    padding: 12,
+    padding: 13,
     marginBottom: 15,
   },
 
