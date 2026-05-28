@@ -167,15 +167,15 @@ export default function HomeScreen({ navigation, route }) {
         <TouchableOpacity
           style={styles.footerItem}
           onPress={() =>
-            navigation.navigate("Home", {
+            navigation.navigate("ProductOverview", {
               uid,
             })
           }
         >
-          <Text style={styles.icon}>📦</Text>
+          <Text style={styles.icon}>📊</Text>
 
           <Text style={styles.footerText}>
-            Products
+            Product Overview
           </Text>
         </TouchableOpacity>
 

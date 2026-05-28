@@ -6,6 +6,7 @@ import EditProductScreen from "../screens/EditProductScreen";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import ProductListScreen from "../screens/ProductListScreen";
+import ProductOverviewScreen from "../screens/ProductOverviewScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,12 @@ export default function AppNavigator() {
           name="Products"
           component={ProductListScreen}
           options={{ title: "Products" }}
+        />
+
+        <Stack.Screen
+          name="ProductOverview"
+          component={ProductOverviewScreen}
+          options={{ title: "Product Overview" }}
         />
 
         <Stack.Screen
