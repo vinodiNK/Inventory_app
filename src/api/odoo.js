@@ -91,6 +91,7 @@ export const getProducts = async (uid) => {
                 "id",
                 "name",
                 "list_price",
+                "qty_available",
               ],
             },
           ],

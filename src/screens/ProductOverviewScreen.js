@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    FlatList,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 import { getProducts, login } from "../api/odoo";
