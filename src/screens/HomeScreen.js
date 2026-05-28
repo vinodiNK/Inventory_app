@@ -197,7 +197,7 @@ export default function HomeScreen({ navigation, route }) {
             <Text style={styles.icon}>📊</Text>
 
             <Text style={styles.footerText}>
-              Product Overview
+               Overview
             </Text>
           </TouchableOpacity>
         )}
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
 
   footer: {
     position: "absolute",
-    bottom: 0,
+    bottom: 38,
     left: 0,
     right: 0,
     height: 75,
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopWidth: 1,
     borderTopColor: "#ddd",
-    elevation: 10,
+    elevation: 2,
     paddingBottom: 5,
   },
 
@@ -301,8 +301,8 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -25,
-    elevation: 5,
+    marginTop: -5,
+    elevation: 1,
   },
 
   addIcon: {
