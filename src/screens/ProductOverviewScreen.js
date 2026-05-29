@@ -19,48 +19,30 @@ export default function ProductOverviewScreen({
     route?.params?.uid ?? null;
   const routeIsAdmin = route?.params?.isAdmin ?? false;
 
-  const [products, setProducts] =
-    useState([]);
-
-  const [uid, setUid] =
-    useState(routeUid);
-
-  const [loading, setLoading] =
-    useState(true);
+  const [products, setProducts] = useState([]);
+  const [uid, setUid] = useState(routeUid);
+  const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(routeIsAdmin);
 
-  // LOAD PRODUCTS
-  const loadProducts = async (
-    userId
-  ) => {
-
+  
+  const loadProducts = async (userId) => {
     try {
-
       setLoading(true);
 
       const currentUid =
         userId ??
         uid ??
-        (await login());
+        (await login()) ??
+        null;
 
       setUid(currentUid);
 
-      const data =
-        await getProducts(
-          currentUid
-        );
-
-      setProducts(data || []);
-
+      const data = await getProducts(currentUid);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (error) {
-
-      console.log(
-        "ProductOverview load error:",
-        error
-      );
-
+      console.log("ProductOverview load error:", error);
+      setProducts([]);
     } finally {
-
       setLoading(false);
     }
   };
@@ -78,49 +60,33 @@ export default function ProductOverviewScreen({
     setIsAdmin(routeIsAdmin);
   }, [routeIsAdmin]);
 
-  // TOTAL PRODUCTS
-  const totalProducts =
-    products.length;
+  const productArray = Array.isArray(products) ? products : [];
 
-  // TOTAL STOCK VALUE
-  const totalStockValue =
-    products.reduce(
-      (sum, item) =>
-        sum +
-        (item.list_price || 0) *
-          (item.qty_available || 0),
-      0
-    );
 
-  // TOTAL QUANTITY
-  const totalQuantity =
-    products.reduce(
-      (sum, item) =>
-        sum +
-        (item.qty_available || 0),
-      0
-    );
+  const totalProducts = productArray.length;
 
-  // MOST EXPENSIVE PRODUCT
+  
+  const totalStockValue = productArray.reduce(
+    (sum, item) => sum + (item.list_price || 0) * (item.qty_available || 0),
+    0
+  );
+
+  
+  const totalQuantity = productArray.reduce(
+    (sum, item) => sum + (item.qty_available || 0),
+    0
+  );
+
+
   const highestPrice =
-    products.length > 0
-      ? Math.max(
-          ...products.map(
-            (p) =>
-              p.list_price || 0
-          )
-        )
+    productArray.length > 0
+      ? Math.max(...productArray.map((p) => p.list_price || 0))
       : 0;
 
-  // CHEAPEST PRODUCT
+  
   const lowestPrice =
-    products.length > 0
-      ? Math.min(
-          ...products.map(
-            (p) =>
-              p.list_price || 0
-          )
-        )
+    productArray.length > 0
+      ? Math.min(...productArray.map((p) => p.list_price || 0))
       : 0;
 
   return (
@@ -130,7 +96,7 @@ export default function ProductOverviewScreen({
         Product Overview
       </Text>
 
-      {/* SUMMARY CARDS */}
+    
 
       <View style={styles.summaryContainer}>
 
@@ -208,14 +174,13 @@ export default function ProductOverviewScreen({
       ) : (
 
         <FlatList
-          data={products}
-
-          keyExtractor={(item) =>
-            item.id.toString()
+          data={productArray}
+          keyExtractor={(item, index) =>
+            item?.id != null
+              ? item.id.toString()
+              : index.toString()
           }
-
           renderItem={({ item }) => (
-
             <View style={styles.row}>
 
               <View>
@@ -243,7 +208,7 @@ export default function ProductOverviewScreen({
 
       )}
 
-      {/* Footer (show Home/Add only to admin) */}
+      
       <View style={styles.footer}>
         {isAdmin && (
           <TouchableOpacity

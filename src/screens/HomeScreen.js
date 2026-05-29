@@ -50,7 +50,7 @@ export default function HomeScreen({ navigation, route }) {
     }, [routeUid])
   );
 
-  // Fetch Products from Odoo
+  
   const loadProducts = async (userId) => {
     try {
       setLoading(true);
@@ -98,7 +98,7 @@ export default function HomeScreen({ navigation, route }) {
     }
   }, []);
 
-  // Filter products based on search text
+  
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchText.toLowerCase())
   );
@@ -106,7 +106,7 @@ export default function HomeScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
 
-      {/* Header */}
+      
       <Text style={styles.title}>
         Odoo Inventory
       </Text>
@@ -115,7 +115,7 @@ export default function HomeScreen({ navigation, route }) {
         Product List from Odoo Database
       </Text>
 
-      {/* Search Bar */}
+    
       <TextInput
         style={styles.searchBar}
         placeholder="Search products..."
@@ -124,7 +124,7 @@ export default function HomeScreen({ navigation, route }) {
         onChangeText={setSearchText}
       />
 
-      {/* Product List */}
+      
       {loading ? (
         <ActivityIndicator size="large" color="green" />
       ) : (
@@ -155,10 +155,10 @@ export default function HomeScreen({ navigation, route }) {
         />
       )}
 
-      {/* Footer */}
+      
       <View style={styles.footer}>
 
-          {/* Home Button - only visible to admin */}
+          
           {isAdmin && (
             <TouchableOpacity
               style={styles.footerItem}
@@ -170,7 +170,7 @@ export default function HomeScreen({ navigation, route }) {
             </TouchableOpacity>
           )}
 
-          {/* Add Product Button - only visible to admin */}
+          
           {isAdmin && (
             <TouchableOpacity
               style={styles.addButton}
@@ -184,7 +184,7 @@ export default function HomeScreen({ navigation, route }) {
             </TouchableOpacity>
           )}
 
-        {/* Products Overview Button - Only for Admin */}
+        
         {isAdmin && (
           <TouchableOpacity
             style={styles.footerItem}

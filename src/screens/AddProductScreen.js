@@ -118,45 +118,51 @@ export default function AddProductScreen({
         Add Product
       </Text>
 
+      <Text style={styles.label}>Product Name</Text>
       <TextInput
-        placeholder="Product Name"
+        placeholder="Enter product name"
         style={styles.input}
         value={name}
         onChangeText={setName}
       />
 
+      <Text style={styles.label}>Price</Text>
       <TextInput
-        placeholder="Price"
+        placeholder="Enter price"
         style={styles.input}
         value={price}
         onChangeText={setPrice}
         keyboardType="numeric"
       />
 
+      <Text style={styles.label}>Barcode</Text>
       <TextInput
-        placeholder="Barcode"
+        placeholder="Enter barcode"
         style={styles.input}
         value={barcode}
         onChangeText={setBarcode}
       />
 
+      <Text style={styles.label}>Internal Reference</Text>
       <TextInput
-        placeholder="Internal Reference"
+        placeholder="Enter internal reference"
         style={styles.input}
         value={defaultCode}
         onChangeText={setDefaultCode}
       />
 
+      <Text style={styles.label}>Quantity</Text>
       <TextInput
-        placeholder="Quantity"
+        placeholder="Enter quantity"
         style={styles.input}
         value={quantity}
         onChangeText={setQuantity}
         keyboardType="numeric"
       />
 
+      <Text style={styles.label}>Description</Text>
       <TextInput
-        placeholder="Description"
+        placeholder="Enter description"
         style={[
           styles.input,
           { height: 100 },
@@ -166,10 +172,9 @@ export default function AddProductScreen({
         onChangeText={setDescription}
       />
 
-     
-
+      <Text style={styles.label}>Category ID</Text>
       <TextInput
-        placeholder="Category ID"
+        placeholder="Enter category ID"
         style={styles.input}
         value={categoryId}
         onChangeText={setCategoryId}

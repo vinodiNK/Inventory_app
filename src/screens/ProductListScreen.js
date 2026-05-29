@@ -1,18 +1,18 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 import {
-    deleteProduct,
-    getProducts,
-    login,
+  deleteProduct,
+  getProducts,
+  login,
 } from "../api/odoo";
 
 import ProductCard from "../components/ProductCard";
@@ -46,13 +46,16 @@ export default function ProductListScreen({ navigation, route }) {
   );
 
   const loadProducts = async (userId) => {
-    const currentUid = userId ?? uid ?? (await login());
+    try {
+      const currentUid = userId ?? uid ?? (await login());
+      setUid(currentUid);
 
-    setUid(currentUid);
-
-    const data = await getProducts(currentUid);
-
-    setProducts(data);
+      const data = await getProducts(currentUid);
+      setProducts(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.log("ProductList load error:", error);
+      setProducts([]);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -61,7 +64,7 @@ export default function ProductListScreen({ navigation, route }) {
     loadProducts(uid);
   };
 
-  // Filter products based on search text
+  
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchText.toLowerCase())
   );
@@ -81,7 +84,7 @@ export default function ProductListScreen({ navigation, route }) {
         </TouchableOpacity>
       )}
 
-      {/* Search Bar */}
+    
       <TextInput
         style={styles.searchBar}
         placeholder="Search products..."
@@ -108,7 +111,7 @@ export default function ProductListScreen({ navigation, route }) {
         contentContainerStyle={{ paddingBottom: 100 }}
       />
 
-      {/* Footer Navigation Bar */}
+      
       <View style={styles.footer}>
         {isAdmin && (
           <TouchableOpacity

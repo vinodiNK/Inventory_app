@@ -18,7 +18,7 @@ export default function EditProductScreen({
   const uid = route?.params?.uid;
   const product = route?.params?.product;
 
-  // STATES
+  
   const [name, setName] = useState(
     product?.name ?? ""
   );
@@ -50,7 +50,7 @@ export default function EditProductScreen({
   const [categories, setCategories] =
     useState([]);
 
-  // LOAD CATEGORIES
+  
   useEffect(() => {
     loadCategories();
   }, []);
@@ -82,7 +82,7 @@ export default function EditProductScreen({
     }
   };
 
-  // UPDATE PRODUCT
+  
   const handleUpdate = async () => {
 
     try {
@@ -91,7 +91,7 @@ export default function EditProductScreen({
 
         name: name,
 
-        // IMPORTANT FIX
+        
         list_price: Number(price),
 
         barcode: barcode,
@@ -151,69 +151,60 @@ export default function EditProductScreen({
         Edit Product
       </Text>
 
-      {/* PRODUCT NAME */}
+      <Text style={styles.label}>Product Name</Text>
       <TextInput
-        placeholder="Product Name"
+        placeholder="Enter product name"
         style={styles.input}
         value={name}
         onChangeText={setName}
       />
 
-      {/* PRICE */}
+      <Text style={styles.label}>Price</Text>
       <TextInput
-        placeholder="Price"
+        placeholder="Enter price"
         style={styles.input}
         value={price}
         onChangeText={setPrice}
         keyboardType="numeric"
       />
 
-      {/* BARCODE */}
+      <Text style={styles.label}>Barcode</Text>
       <TextInput
-        placeholder="Barcode"
+        placeholder="Enter barcode"
         style={styles.input}
         value={barcode}
         onChangeText={setBarcode}
       />
 
-      {/* INTERNAL REFERENCE */}
+      <Text style={styles.label}>Internal Reference</Text>
       <TextInput
-        placeholder="Internal Reference"
+        placeholder="Enter internal reference"
         style={styles.input}
         value={defaultCode}
         onChangeText={setDefaultCode}
       />
 
-      {/* DESCRIPTION */}
+      <Text style={styles.label}>Description</Text>
       <TextInput
-        placeholder="Description"
+        placeholder="Enter description"
         style={[
           styles.input,
           { height: 100 },
         ]}
         multiline
         value={description}
-        onChangeText={
-          setDescription
-        }
+        onChangeText={setDescription}
       />
 
-      {/* CATEGORY */}
-      <Text style={styles.label}>
-        Category ID
-      </Text>
-
+      <Text style={styles.label}>Category ID</Text>
       <TextInput
-        placeholder="Category ID"
+        placeholder="Enter category ID"
         style={styles.input}
         value={categoryId}
-        onChangeText={
-          setCategoryId
-        }
+        onChangeText={setCategoryId}
         keyboardType="numeric"
       />
 
-      {/* UPDATE BUTTON */}
       <TouchableOpacity
         style={styles.button}
         onPress={handleUpdate}

@@ -1,28 +1,17 @@
 import axios from "axios";
 
-// ======================
-// ODOO CONFIG
-// ======================
-
-// Replace with your Odoo server URL
-// Example:
-// Local PC: http://192.168.1.10:8069
-// Android Emulator: http://10.0.2.2:8069
 
 const ODOO_URL = "http://192.168.172.174:8069";
 
-// Your Odoo credentials
+
 const DB_NAME = "admin18odoo";
 const USERNAME = "admin";
 const PASSWORD = "admin18odoo";
 
-// Configure axios
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.withCredentials = false;
 
-// ======================
-// LOGIN
-// ======================
+
 
 export const login = async (
   username = USERNAME,
@@ -62,9 +51,7 @@ export const login = async (
   }
 };
 
-// ======================
-// GET PRODUCTS
-// ======================
+
 
 export const getProducts = async (uid) => {
   try {
@@ -116,9 +103,6 @@ export const getProducts = async (uid) => {
   }
 };
 
-// ======================
-// CREATE PRODUCT
-// ======================
 
 export const createProduct = async (
   uid,
@@ -175,9 +159,7 @@ export const createProduct = async (
   }
 };
 
-// ======================
-// UPDATE PRODUCT
-// ======================
+
 
 export const updateProduct = async (
   uid,
@@ -234,9 +216,7 @@ export const updateProduct = async (
   }
 };
 
-// ======================
-// DELETE PRODUCT
-// ======================
+
 
 export const deleteProduct = async (
   uid,
@@ -283,9 +263,7 @@ export const deleteProduct = async (
   }
 };
 
-// ======================
-// GET USER ROLE
-// ======================
+
 
 export const getUserRole = async (uid) => {
   try {
@@ -327,8 +305,7 @@ export const getUserRole = async (uid) => {
 
     const userData = response.data.result?.[0];
     
-    // Check if user has admin group (group_id contains admin group)
-    // Odoo admin users are typically in group_id with admin-related groups
+
     const isAdmin = userData?.groups_id?.some(
       (group) =>
         typeof group === "number" ||
