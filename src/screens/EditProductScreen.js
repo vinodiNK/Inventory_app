@@ -41,12 +41,18 @@ export default function EditProductScreen({
       product?.description_sale ?? ""
     );
 
+  const [quantity, setQuantity] = useState(
+    product?.qty_available?.toString() ?? ""
+  );
+
   const [categoryId, setCategoryId] =
     useState(
       product?.categ_id?.[0]?.toString() ??
         ""
     );
 
+  const [nameError, setNameError] = useState("");
+  const [priceError, setPriceError] = useState("");
   const [categories, setCategories] =
     useState([]);
 
@@ -84,15 +90,39 @@ export default function EditProductScreen({
 
   
   const handleUpdate = async () => {
+    setNameError("");
+    setPriceError("");
+
+    const trimmedName = name.trim();
+    const trimmedPrice = price.trim();
+
+    let hasError = false;
+
+    if (!trimmedName) {
+      setNameError("Product name is required");
+      hasError = true;
+    }
+
+    if (!trimmedPrice) {
+      setPriceError("Price is required");
+      hasError = true;
+    } else if (!/^[0-9]+$/.test(trimmedPrice)) {
+      setPriceError("Price must be an integer value");
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
 
     try {
 
       const updatedData = {
 
-        name: name,
+        name: trimmedName,
 
         
-        list_price: Number(price),
+        list_price: Number(trimmedPrice),
 
         barcode: barcode,
 
@@ -151,22 +181,35 @@ export default function EditProductScreen({
         Edit Product
       </Text>
 
-      <Text style={styles.label}>Product Name</Text>
+      <Text style={styles.label}>Product Name *</Text>
       <TextInput
         placeholder="Enter product name"
         style={styles.input}
         value={name}
-        onChangeText={setName}
+        onChangeText={(text) => {
+          setName(text);
+          if (nameError) setNameError("");
+        }}
       />
+      {nameError ? (
+        <Text style={styles.errorText}>{nameError}</Text>
+      ) : null}
 
-      <Text style={styles.label}>Price</Text>
+      <Text style={styles.label}>Price *</Text>
       <TextInput
         placeholder="Enter price"
         style={styles.input}
         value={price}
-        onChangeText={setPrice}
+        onChangeText={(text) => {
+          const sanitized = text.replace(/[^0-9]/g, "");
+          setPrice(sanitized);
+          if (priceError) setPriceError("");
+        }}
         keyboardType="numeric"
       />
+      {priceError ? (
+        <Text style={styles.errorText}>{priceError}</Text>
+      ) : null}
 
       <Text style={styles.label}>Barcode</Text>
       <TextInput
@@ -182,6 +225,14 @@ export default function EditProductScreen({
         style={styles.input}
         value={defaultCode}
         onChangeText={setDefaultCode}
+      />
+
+      <Text style={styles.label}>Quantity</Text>
+      <TextInput
+        placeholder="Quantity"
+        style={styles.input}
+        value={quantity}
+        editable={false}
       />
 
       <Text style={styles.label}>Description</Text>
@@ -245,6 +296,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     fontWeight: "600",
+  },
+
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    marginBottom: 10,
   },
 
   button: {

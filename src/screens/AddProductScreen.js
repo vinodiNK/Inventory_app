@@ -35,6 +35,8 @@ export default function AddProductScreen({
   const [categoryId, setCategoryId] =
     useState("");
 
+  const [nameError, setNameError] = useState("");
+  const [priceError, setPriceError] = useState("");
   const [categories, setCategories] =
     useState([]);
 
@@ -63,14 +65,38 @@ export default function AddProductScreen({
   };
 
   const handleAdd = async () => {
+    setNameError("");
+    setPriceError("");
+
+    const trimmedName = name.trim();
+    const trimmedPrice = price.trim();
+
+    let hasError = false;
+
+    if (!trimmedName) {
+      setNameError("Product name is required");
+      hasError = true;
+    }
+
+    if (!trimmedPrice) {
+      setPriceError("Price is required");
+      hasError = true;
+    } else if (!/^[0-9]+$/.test(trimmedPrice)) {
+      setPriceError("Price must be an integer value");
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
 
     try {
 
       const productData = {
 
-        name,
+        name: trimmedName,
 
-        list_price: parseFloat(price),
+        list_price: parseInt(trimmedPrice, 10),
 
         barcode,
 
@@ -118,22 +144,36 @@ export default function AddProductScreen({
         Add Product
       </Text>
 
-      <Text style={styles.label}>Product Name</Text>
+      <Text style={styles.label}>Product Name *</Text>
       <TextInput
         placeholder="Enter product name"
         style={styles.input}
         value={name}
-        onChangeText={setName}
+        onChangeText={(text) => {
+          setName(text);
+          if (nameError) setNameError("");
+        }}
       />
+      {nameError ? (
+        <Text style={styles.errorText}>{nameError}</Text>
+      ) : null}
 
-      <Text style={styles.label}>Price</Text>
+      <Text style={styles.label}>Price *</Text>
       <TextInput
         placeholder="Enter price"
         style={styles.input}
         value={price}
-        onChangeText={setPrice}
+        onChangeText={(text) => {
+          const sanitized = text.replace(/[^0-9]/g, "");
+          setPrice(sanitized);
+          if (priceError) setPriceError("");
+        }}
         keyboardType="numeric"
       />
+      {priceError ? (
+        <Text style={styles.errorText}>{priceError}</Text>
+      ) : null}
+
 
       <Text style={styles.label}>Barcode</Text>
       <TextInput
@@ -222,6 +262,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     fontWeight: "600",
+  },
+
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+    fontSize: 14,
   },
 
   button: {
