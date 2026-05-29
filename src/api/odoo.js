@@ -131,7 +131,7 @@ export const createProduct = async (
                 name: product.name,
 
                 list_price: parseFloat(
-                  product.price
+                  product.list_price ?? product.price
                 ),
 
                 type: "consu",
@@ -190,7 +190,7 @@ export const updateProduct = async (
                 name: product.name,
 
                 list_price: parseFloat(
-                  product.price
+                  product.list_price ?? product.price
                 ),
               },
             ],
