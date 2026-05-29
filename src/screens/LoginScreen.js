@@ -76,7 +76,7 @@ export default function LoginScreen({
             <Ionicons
               name="cube"
               size={60}
-              color="#16a34a"
+              color="#5b21b6"
             />
           </View>
         </View>
@@ -103,7 +103,7 @@ export default function LoginScreen({
             <Ionicons
               name="mail-outline"
               size={24}
-              color="#16a34a"
+              color="#5b21b6"
             />
 
             <TextInput
@@ -126,7 +126,7 @@ export default function LoginScreen({
             <Ionicons
               name="lock-closed-outline"
               size={24}
-              color="#16a34a"
+              color="#5b21b6"
             />
 
             <TextInput
@@ -176,7 +176,7 @@ export default function LoginScreen({
             <Ionicons
               name="shield-checkmark-outline"
               size={20}
-              color="#16a34a"
+              color="#5b21b6"
             />
 
             <Text
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    color: "#16a34a",
+    color: "#5b21b6",
     fontSize: 18,
     fontWeight: "700",
     marginBottom: 10,
@@ -290,14 +290,14 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#16a34a",
+    backgroundColor: "#5b21b6",
     height: 62,
     borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
 
-    shadowColor: "#16a34a",
+    shadowColor: "#5b21b6",
     shadowOffset: {
       width: 0,
       height: 5,

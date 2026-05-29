@@ -126,7 +126,7 @@ export default function HomeScreen({ navigation, route }) {
 
       
       {loading ? (
-        <ActivityIndicator size="large" color="green" />
+        <ActivityIndicator size="large" color="#5b21b6" />
       ) : (
         <FlatList
           data={filteredProducts}
@@ -166,7 +166,7 @@ export default function HomeScreen({ navigation, route }) {
             >
               <Text style={styles.icon}>🏠</Text>
 
-              <Text style={[styles.footerText, { color: "green" }]}>Home</Text>
+              <Text style={[styles.footerText, { color: "#5b21b6" }]}>Home</Text>
             </TouchableOpacity>
           )}
 
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 12,
     marginTop: 3,
-    color: "#555",
+    color: "#5b21b6",
   },
 
   icon: {
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "green",
+    backgroundColor: "#5b21b6",
     justifyContent: "center",
     alignItems: "center",
     marginTop: -5,

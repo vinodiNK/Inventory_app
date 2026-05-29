@@ -168,7 +168,7 @@ export default function ProductOverviewScreen({
 
         <ActivityIndicator
           size="large"
-          color="green"
+          color="#5b21b6"
         />
 
       ) : (
@@ -215,9 +215,9 @@ export default function ProductOverviewScreen({
             style={styles.footerItem}
             onPress={() => navigation.navigate("Login")}
           >
-            <Text style={styles.icon}>🏠</Text>
+            <Text style={styles.icon}>🔐</Text>
 
-            <Text style={[styles.footerText, { color: "green" }]}>Home</Text>
+            <Text style={[styles.footerText, { color: "#5b21b6" }]}>Login</Text>
           </TouchableOpacity>
         )}
 
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
   cardValue: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "green",
+    color: "#5b21b6",
   },
 
   row: {
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "green",
+    color: "#5b21b6",
   },
 
   footer: {
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 12,
     marginTop: 3,
-    color: "#555",
+    color: "#5b21b6",
   },
 
   icon: {
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "green",
+    backgroundColor: "#5b21b6",
     justifyContent: "center",
     alignItems: "center",
     marginTop: -5,

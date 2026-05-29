@@ -119,7 +119,7 @@ export default function ProductListScreen({ navigation, route }) {
             onPress={() => navigation.navigate("Home", { uid, isAdmin })}
           >
             <Text style={styles.icon}>🏠</Text>
-            <Text style={[styles.footerText, { color: "green" }]}>Home</Text>
+            <Text style={[styles.footerText, { color: "#5b21b6" }]}>Home</Text>
           </TouchableOpacity>
         )}
 
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
 
   addButton: {
-    backgroundColor: "green",
+    backgroundColor: "#5b21b6",
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "green",
+    backgroundColor: "#5b21b6",
     justifyContent: "center",
     alignItems: "center",
     marginTop: -25,
